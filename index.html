@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luyện tập Toán lớp 6-7</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7faff;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 18px;
+      text-align: center;
+    }
+    .result.correct { color: green; }
+    .result.wrong { color: red; }
+    .tab-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+    .tab-buttons button {
+      flex: 1;
+      margin: 0 5px;
+      background-color: #e0f0ff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Bài luyện tập Toán</h2>
+    <div class="tab-buttons">
+      <button onclick="showTab('baitap')">Bài tập trắc nghiệm</button>
+      <button onclick="showTab('nguyento')">Số nguyên tố</button>
+      <button onclick="showTab('chinhphuong')">Số chính phương</button>
+      <button onclick="showTab('quiz')">Quiz kiểm tra</button>
+    </div>
+
+    <!-- Kiểm tra số nguyên tố -->
+    <div id="nguyento" class="tab">
+      <input type="number" id="ntInput" placeholder="Nhập số cần kiểm tra">
+      <button onclick="kiemTraNguyenTo()">Kiểm tra số nguyên tố</button>
+      <div id="ntResult" class="result"></div>
+    </div>
+
+    <!-- Kiểm tra số chính phương -->
+    <div id="chinhphuong" class="tab hidden">
+      <input type="number" id="cpInput" placeholder="Nhập số cần kiểm tra">
+      <button onclick="kiemTraChinhPhuong()">Kiểm tra số chính phương</button>
+      <div id="cpResult" class="result"></div>
+    </div>
+
+    <!-- Quiz kiểm tra -->
+    <div id="quiz" class="tab hidden">
+      <button onclick="taoSoNgauNhien()">Tạo số ngẫu nhiên</button>
+      <div id="quizSo" style="margin-top:10px; text-align:center; font-size:20px;"></div>
+      <button onclick="traLoi(true)">Là số nguyên tố</button>
+      <button onclick="traLoi(false)">Không phải</button>
+      <div id="quizResult" class="result"></div>
+    
+<!-- Bài tập trắc nghiệm -->
+<div id="baitap" class="tab hidden">
+  <p><strong>Bài 1:</strong> Số 49 là:</p>
+  <input type="radio" name="q1" value="a"> A. Số nguyên tố<br>
+  <input type="radio" name="q1" value="b"> B. Số chính phương<br>
+  <input type="radio" name="q1" value="c"> C. Số lẻ<br><br>
+
+  <p><strong>Bài 2:</strong> Số nào sau đây là số nguyên tố?</p>
+  <input type="radio" name="q2" value="a"> A. 15<br>
+  <input type="radio" name="q2" value="b"> B. 17<br>
+  <input type="radio" name="q2" value="c"> C. 21<br><br>
+
+  <button onclick="chamDiem()">Chấm điểm</button>
+  <div id="quizScore" class="result"></div>
+</div>
+
+  </div>
+
+  <script>
+    function showTab(id) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+      document.querySelectorAll('.result').forEach(r => {
+        r.textContent = '';
+        r.className = 'result';
+      });
+    }
+
+    function kiemTraNguyenTo() {
+      const n = parseInt(document.getElementById('ntInput').value);
+      const res = document.getElementById('ntResult');
+      if (isNaN(n) || n < 1) {
+        res.textContent = "Vui lòng nhập số nguyên dương.";
+        res.className = 'result wrong';
+        return;
+      }
+      if (n === 1) {
+        res.textContent = "1 không phải là số nguyên tố.";
+        res.className = 'result wrong';
+        return;
+      }
+      for (let i = 2; i <= Math.sqrt(n); i++) {
+        if (n % i === 0) {
+          res.textContent = n + " không phải là số nguyên tố.";
+          res.className = 'result wrong';
+          return;
+        }
+      }
+      res.textContent = n + " là số nguyên tố.";
+      res.className = 'result correct';
+    }
+
+    function kiemTraChinhPhuong() {
+      const n = parseInt(document.getElementById('cpInput').value);
+      const res = document.getElementById('cpResult');
+      if (isNaN(n) || n < 0) {
+        res.textContent = "Vui lòng nhập số tự nhiên.";
+        res.className = 'result wrong';
+        return;
+      }
+      const can = Math.sqrt(n);
+      if (Number.isInteger(can)) {
+        res.textContent = n + " là số chính phương.";
+        res.className = 'result correct';
+      } else {
+        res.textContent = n + " không phải là số chính phương.";
+        res.className = 'result wrong';
+      }
+    }
+
+    let soDangKiemTra = 0;
+    function taoSoNgauNhien() {
+      soDangKiemTra = Math.floor(Math.random() * 100) + 1;
+      document.getElementById('quizSo').textContent = "Số: " + soDangKiemTra;
+      document.getElementById('quizResult').textContent = '';
+    }
+
+    function traLoi(traLoiLaNguyenTo) {
+      const res = document.getElementById('quizResult');
+      if (!soDangKiemTra) {
+        res.textContent = "Hãy tạo số trước.";
+        res.className = 'result wrong';
+        return;
+      }
+      const laNguyenTo = (n) => {
+        if (n < 2) return false;
+        for (let i = 2; i <= Math.sqrt(n); i++) {
+          if (n % i === 0) return false;
+        }
+        return true;
+      };
+      const dung = laNguyenTo(soDangKiemTra) === traLoiLaNguyenTo;
+      res.textContent = dung ? "Chính xác! ✅" : "Sai rồi! ❌";
+      res.className = 'result ' + (dung ? 'correct' : 'wrong');
+    }
+  
+    function chamDiem() {
+      const ans1 = document.querySelector('input[name="q1"]:checked');
+      const ans2 = document.querySelector('input[name="q2"]:checked');
+      let score = 0;
+      if (ans1 && ans1.value === "b") score++;
+      if (ans2 && ans2.value === "b") score++;
+      const result = document.getElementById('quizScore');
+      result.textContent = "Bạn đúng " + score + "/2 câu.";
+      result.className = 'result ' + (score === 2 ? 'correct' : 'wrong');
+    }
+
+  </script>
+</body>
+</html>
